@@ -6,29 +6,24 @@ import User from "../models/User";
 
 export const getJoin = (req, res) => {
   res.render("join", {
-    pageTitle: "Join"
+    pageTitle: "Join",
   });
 };
 
 export const postJoin = async (req, res, next) => {
   const {
-    body: {
-      name,
-      email,
-      password,
-      password2
-    }
+    body: { name, email, password, password2 },
   } = req;
   if (password !== password2) {
     res.status(400);
     res.render("join", {
-      pageTitle: "Join"
+      pageTitle: "Join",
     });
   } else {
     try {
       const user = await User({
         name,
-        email
+        email,
       });
       await User.register(user, password);
       next();
@@ -43,12 +38,12 @@ export const postJoin = async (req, res, next) => {
 
 export const getLogin = (req, res) =>
   res.render("login", {
-    pageTitle: "Log In"
+    pageTitle: "Log In",
   });
 
 export const postLogin = passport.authenticate("local", {
   failureRedirect: routes.login,
-  successRedirect: routes.home
+  successRedirect: routes.home,
 });
 
 // Social Log In (GitHub)
@@ -57,21 +52,16 @@ export const githubLogin = passport.authenticate("github");
 
 export const githubLoginCallback = async (_, __, profile, cb) => {
   const {
-    _json: {
-      id,
-      avatarUrl,
-      name,
-      email
-    }
+    _json: { id, avatarUrl, name, email },
   } = profile;
   console.log(id);
   try {
     const user = await User.findOne({
-      email
+      email,
     });
     if (user) {
       user.githubId = id;
-      user.avatarUrl = `https://avatars0.githubusercontent.com/u/${id}?v=4`
+      user.avatarUrl = `https://avatars0.githubusercontent.com/u/${id}?v=4`;
       user.save();
       return cb(null, user);
     }
@@ -79,7 +69,7 @@ export const githubLoginCallback = async (_, __, profile, cb) => {
       email,
       name,
       githubId: id,
-      avatarUrl
+      avatarUrl,
     });
     return cb(null, newUser);
   } catch (error) {
@@ -91,43 +81,43 @@ export const postGithubLogIn = (req, res) => {
   res.redirect(routes.home);
 };
 
-// Social Log In (Facebook)
+// // Social Log In (Facebook)
 
-export const facebookLogin = passport.authenticate("facebook");
+// export const facebookLogin = passport.authenticate("facebook");
 
-export const facebookLoginCallback = async (_, __, profile, cb) => {
-  const {
-    _json: {
-      id,
-      name,
-      email
-    }
-  } = profile;
-  try {
-    const user = await User.findOne({
-      email
-    });
-    if (user) {
-      user.facebookId = id;
-      user.avatarUrl = `https://graph.facebook.com/${id}/picture?type=large`;
-      user.save();
-      return cb(null, user);
-    }
-    const newUser = await User.create({
-      email,
-      name,
-      facebookId: id,
-      avatarUrl: `https://graph.facebook.com/${id}/picture?type=large`
-    });
-    return cb(null, newUser);
-  } catch (error) {
-    return cb(error);
-  }
-};
+// export const facebookLoginCallback = async (_, __, profile, cb) => {
+//   const {
+//     _json: {
+//       id,
+//       name,
+//       email
+//     }
+//   } = profile;
+//   try {
+//     const user = await User.findOne({
+//       email
+//     });
+//     if (user) {
+//       user.facebookId = id;
+//       user.avatarUrl = `https://graph.facebook.com/${id}/picture?type=large`;
+//       user.save();
+//       return cb(null, user);
+//     }
+//     const newUser = await User.create({
+//       email,
+//       name,
+//       facebookId: id,
+//       avatarUrl: `https://graph.facebook.com/${id}/picture?type=large`
+//     });
+//     return cb(null, newUser);
+//   } catch (error) {
+//     return cb(error);
+//   }
+// };
 
-export const postFacebookLogin = (req, res) => {
-  res.redirect(routes.home);
-};
+// export const postFacebookLogin = (req, res) => {
+//   res.redirect(routes.home);
+// };
 
 // Log Out
 
@@ -141,7 +131,7 @@ export const getMe = async (req, res) => {
     const user = await User.findById(req.user.id).populate("videos");
     res.render("userDetail", {
       pageTitle: "User Detail",
-      user
+      user,
     });
   } catch (error) {
     res.redirect(routes.home);
@@ -152,16 +142,14 @@ export const getMe = async (req, res) => {
 
 export const userDetail = async (req, res) => {
   const {
-    params: {
-      id
-    }
+    params: { id },
   } = req;
   try {
     const user = await User.findById(id).populate("videos");
     console.log(user);
     res.render("userDetail", {
       pageTitle: "User Detail",
-      user
+      user,
     });
   } catch (error) {
     res.redirect(routes.home);
@@ -170,25 +158,23 @@ export const userDetail = async (req, res) => {
 
 // Edit Profile
 
-export const getEditProfile = (req, res) => res.render("editProfile", {
-  pageTitle: "Edit Profile"
-});
+export const getEditProfile = (req, res) =>
+  res.render("editProfile", {
+    pageTitle: "Edit Profile",
+  });
 
 export const postEditProfile = async (req, res) => {
   const {
-    body: {
-      name,
-      email
-    },
-    file
+    body: { name, email },
+    file,
   } = req;
   try {
     await User.findByIdAndUpdate(req.user.id, {
       name,
       email,
-      avatarUrl: file ? file.path : req.user.avatarUrl
+      avatarUrl: file ? file.path : req.user.avatarUrl,
     });
-    res.redirect(routes.me)
+    res.redirect(routes.me);
   } catch (error) {
     res.redirect(routes.editProfile);
   }
@@ -198,16 +184,12 @@ export const postEditProfile = async (req, res) => {
 
 export const getChangePassword = (req, res) =>
   res.render("changePassword", {
-    pageTitle: "Change Password"
+    pageTitle: "Change Password",
   });
 
 export const postChangePassword = async (req, res) => {
   const {
-    body: {
-      oldPassword,
-      newPassword,
-      newPassword1
-    }
+    body: { oldPassword, newPassword, newPassword1 },
   } = req;
   try {
     if (newPassword !== newPassword1) {

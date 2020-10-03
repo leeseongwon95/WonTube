@@ -32,22 +32,28 @@ textarea,
   background-color: white;
   max-width: 320px;
   resize: none;
+
   &::placeholder {
     font-weight: 300;
     color: rgba(0, 0, 0, 0.7);
   }
 }
+
+
+
+
 button {
   border: none;
   background-color: #3498db;
   color: white;
+  cursor: pointer;
 }
 
 button.delete {
   background-color: $dark-red;
 }
 
-button,
+
 input[type="submit"] {
   cursor: pointer;
 }

@@ -21,20 +21,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 50px;
 
     a:not(:last-child) {
       margin-bottom: 20px;
     }
-  }
-
-}
-
-.user-videos {
-  display: grid;
-  width: 100px;
-  height: 100%;
-
-  .user-video {
-    width: 100px;
   }
 }
