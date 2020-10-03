@@ -1,5 +1,6 @@
 extends layouts/main
 include mixins/videoPlayer
+
 block content
     .video-detail__container
         +videoPlayer({
@@ -33,7 +34,3 @@ block content
                 each comment in video.comments.reverse()
                     li
                         span=comment.text
-                        
-                        
-                            
-                    
