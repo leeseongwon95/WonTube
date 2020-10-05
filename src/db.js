@@ -4,11 +4,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 mongoose.connect(
-  process.env.PRODUCTION ? process.env.MONGO_URL_PROD : process.env.MONGO_URL,
-  {
-    useNewUrlParser: true,
-    useFindAndModify: false,
-  }
+  process.env.PRODUCTION ? process.env.MONGO_PROD : process.env.MONGO,
+  { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false }
 );
 
 const db = mongoose.connection;
